@@ -1,11 +1,20 @@
 package main
 
 import (
+	"github.com/youtube/vitess/go/cache"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 )
+
+var imageCache = cache.NewLRUCache(1024)
+
+type image []byte
+
+func (img image) Size() int {
+	return 1
+}
 
 func Log(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +24,7 @@ func Log(handler http.Handler) http.Handler {
 }
 
 func proxyHandler(w http.ResponseWriter, req *http.Request) {
+	println(imageCache.StatsJSON())
 	w.Header().Set("Server", "insproxy")
 	if req.Method != "GET" {
 		http.Error(w, "", http.StatusMethodNotAllowed)
@@ -34,6 +44,15 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	img, ok := imageCache.Get(insUrl.String())
+
+	if ok {
+		log.Println("cache hit!")
+		w.Write(img.(image))
+		return
+	}
+	log.Println("cache missed!")
+
 	resp, err := http.Get(insUrl.String())
 	if err != nil {
 		log.Println("proxy failed: ", err)
@@ -45,6 +64,9 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	imageCache.Set(insUrl.String(), image(body))
+
 	w.Write(body)
 
 	resp.Body.Close()
