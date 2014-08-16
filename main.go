@@ -8,12 +8,12 @@ import (
 	"net/url"
 )
 
-var imageCache = cache.NewLRUCache(8192)
+var imageCache = cache.NewLRUCache(1024 * 1024 * 512) // max memory useage 512m
 
 type image []byte
 
 func (img image) Size() int {
-	return 1
+	return len(img)
 }
 
 func Log(handler http.Handler) http.Handler {
@@ -24,7 +24,6 @@ func Log(handler http.Handler) http.Handler {
 }
 
 func proxyHandler(w http.ResponseWriter, req *http.Request) {
-	println(imageCache.StatsJSON())
 	w.Header().Set("Server", "insproxy")
 	if req.Method != "GET" {
 		http.Error(w, "", http.StatusMethodNotAllowed)
@@ -48,6 +47,7 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 
 	if ok {
 		log.Println("cache hit!")
+		w.Header().Set("Cache-Control", "max-age=2592000")
 		w.Write(img.(image))
 		return
 	}
@@ -67,6 +67,7 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 
 	imageCache.Set(insUrl.String(), image(body))
 
+	w.Header().Set("Cache-Control", "max-age=2592000")
 	w.Write(body)
 
 	resp.Body.Close()
