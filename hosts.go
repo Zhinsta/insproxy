@@ -14,6 +14,7 @@ var allowdHosts = map[string]bool{
 	"distilleryimage9.s3.amazonaws.com":  true,
 	"distilleryimage10.s3.amazonaws.com": true,
 	"distilleryimage11.s3.amazonaws.com": true,
+	"images.ak.instagram.com":            true,
 	"origincache-ash.fbcdn.net":          true,
 	"origincache-frc.fbcdn.net":          true,
 	"origincache-prn.fbcdn.net":          true,
