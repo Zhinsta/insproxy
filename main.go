@@ -15,7 +15,7 @@ func Log(handler http.Handler) http.Handler {
 }
 
 func proxyHandler(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Server", "zhinsta-insproxy")
+	w.Header().Set("Server", "insproxy")
 	if req.Method != "GET" {
 		http.Error(w, "", http.StatusMethodNotAllowed)
 		return
@@ -25,6 +25,12 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Println("proxy url is not valid: ", req.URL)
 		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
+	if !isHostAllowed(insUrl.Host) {
+		log.Println("proxy host is not allowed: ", req.URL)
+		http.Error(w, "", http.StatusNotAcceptable)
 		return
 	}
 
