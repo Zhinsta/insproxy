@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -14,6 +15,7 @@ func Log(handler http.Handler) http.Handler {
 }
 
 func proxyHandler(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Server", "zhinsta-insproxy")
 	if req.Method != "GET" {
 		http.Error(w, "", http.StatusMethodNotAllowed)
 		return
@@ -32,8 +34,13 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "proxy failed", http.StatusBadGateway)
 		return
 	}
-	log.Println(resp)
-	resp.Write(w)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.Write(body)
+
 	resp.Body.Close()
 }
 
