@@ -35,7 +35,6 @@ var allowdHosts = map[string]bool{
 }
 
 func isHostAllowed(host string) bool {
-	println(host)
 	_, ok := allowdHosts[host]
 	return ok
 }
