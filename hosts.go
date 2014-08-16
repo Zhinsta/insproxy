@@ -32,7 +32,7 @@ var allowdHosts = map[string]bool{
 	"scontent-d.cdninstagram.com":        true,
 	"scontent-e.cdninstagram.com":        true,
 	"scontent-f.cdninstagram.com":        true,
-	// "zhinsta.com:8080":                   true, // for debug
+	"zhinsta.com:8080":                   true, // for debug
 }
 
 func isHostAllowed(host string) bool {
