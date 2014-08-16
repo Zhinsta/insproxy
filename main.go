@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-var imageCache = cache.NewLRUCache(1024)
+var imageCache = cache.NewLRUCache(2048)
 
 type image []byte
 
