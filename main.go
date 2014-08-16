@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/youtube/vitess/go/cache"
 	"io/ioutil"
 	"log"
@@ -8,7 +9,11 @@ import (
 	"net/url"
 )
 
-var imageCache = cache.NewLRUCache(1024 * 1024 * 512) // max memory useage 512m
+var (
+	imageCache          = cache.NewLRUCache(1024 * 1024 * 512) // max memory useage 512m
+	hitCount    float64 = 0                                    // not thread safe, but enough for analytic
+	missedCount float64 = 0
+)
 
 type image []byte
 
@@ -46,12 +51,12 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 	img, ok := imageCache.Get(insUrl.String())
 
 	if ok {
-		log.Println("cache hit!")
+		hitCount++
 		w.Header().Set("Cache-Control", "max-age=2592000")
 		w.Write(img.(image))
 		return
 	}
-	log.Println("cache missed!")
+	missedCount++
 
 	resp, err := http.Get(insUrl.String())
 	if err != nil {
@@ -73,8 +78,28 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 	resp.Body.Close()
 }
 
+func statsHandler(w http.ResponseWriter, req *http.Request) {
+	length, size, capacity, oldest := imageCache.Stats()
+	hitRate := 0.0
+	if missedCount == 0 && hitCount == 0 {
+		hitRate = 0
+	} else {
+		hitRate = hitCount / (hitCount + missedCount)
+	}
+	fmt.Fprintf(w, `
+    length: %v
+    size: %v
+    capacity: %v
+    oldest: %v
+    hit: %v
+    missed: %v
+    hit rate: %v
+    `, length, size, capacity, oldest, hitCount, missedCount, hitRate)
+}
+
 func main() {
 	http.HandleFunc("/", proxyHandler)
+	http.HandleFunc("/stats", statsHandler)
 
 	log.Println("About to listen 0.0.0.0:8080...")
 	err := http.ListenAndServe(":8080", Log(http.DefaultServeMux))
