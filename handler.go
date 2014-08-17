@@ -16,7 +16,7 @@ func (img image) Size() int {
 }
 
 var (
-	imageCache          = cache.NewLRUCache(1024 * 1024 * 512) // max memory useage 512m
+	imageCache          = cache.NewLRUCache(1024 * 1024 * 128) // max memory useage
 	hitCount    float64 = 0                                    // not thread safe, but enough for analytic
 	missedCount float64 = 0
 )
