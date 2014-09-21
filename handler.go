@@ -41,15 +41,15 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	img, ok := imageCache.Get(insUrl.String())
+	// img, ok := imageCache.Get(insUrl.String())
 
-	if ok {
-		hitCount++
-		w.Header().Set("Cache-Control", "max-age=2592000")
-		w.Write(img.(image))
-		return
-	}
-	missedCount++
+	// if ok {
+	// 	hitCount++
+	// 	w.Header().Set("Cache-Control", "max-age=2592000")
+	// 	w.Write(img.(image))
+	// 	return
+	// }
+	// missedCount++
 
 	resp, err := http.Get(insUrl.String())
 	if err != nil {
