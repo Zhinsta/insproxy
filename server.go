@@ -45,8 +45,8 @@ func main() {
 	http.HandleFunc("/", proxyHandler)
 	http.HandleFunc("/stats", statsHandler)
 
-	log.Println("About to listen 0.0.0.0:8080...")
-	err := http.ListenAndServe(":8080", makeLogHandler(makeGzipHandler(http.DefaultServeMux)))
+	log.Println("About to listen 0.0.0.0:8000...")
+	err := http.ListenAndServe(":8000", makeLogHandler(makeGzipHandler(http.DefaultServeMux)))
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
