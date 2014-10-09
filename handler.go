@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type image []byte
@@ -29,7 +30,7 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	picUrl, err := base64.StdEncoding.DecodeString(req.URL.String())
+	picUrl, err := base64.StdEncoding.DecodeString(strings.TrimPrefix(req.URL.String(), "/"))
 	if err != nil {
 		log.Println("proxy url is not valid: ", req.URL)
 		http.Error(w, "", http.StatusMethodNotAllowed)
