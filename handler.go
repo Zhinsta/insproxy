@@ -35,7 +35,7 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "", http.StatusMethodNotAllowed)
 		return
 	}
-	insUrl, err := url.Parse("http:/" + req.URL.String())
+	insUrl, err := url.Parse("http:/" + picUrl)
 	if err != nil {
 		log.Println("proxy url is not valid: ", req.URL)
 		http.Error(w, "", http.StatusBadRequest)
