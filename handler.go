@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/youtube/vitess/go/cache"
 	"io/ioutil"
@@ -28,6 +29,12 @@ func proxyHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	picUrl, err := base64.StdEncoding.DecodeString(req.URL.String())
+	if err != nil {
+		log.Println("proxy url is not valid: ", req.URL)
+		http.Error(w, "", http.StatusMethodNotAllowed)
+		return
+	}
 	insUrl, err := url.Parse("http:/" + req.URL.String())
 	if err != nil {
 		log.Println("proxy url is not valid: ", req.URL)
