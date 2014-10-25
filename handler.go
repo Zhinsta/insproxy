@@ -9,12 +9,6 @@ import (
 	"strings"
 )
 
-type image []byte
-
-func (img image) Size() int {
-	return len(img)
-}
-
 func proxyHandler(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Server", "insproxy")
 	if req.Method != "GET" {
