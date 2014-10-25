@@ -43,7 +43,6 @@ func makeGzipHandler(handler http.Handler) http.Handler {
 
 func main() {
 	http.HandleFunc("/", proxyHandler)
-	http.HandleFunc("/stats", statsHandler)
 
 	log.Println("About to listen 0.0.0.0:8000...")
 	err := http.ListenAndServe(":8000", makeLogHandler(makeGzipHandler(http.DefaultServeMux)))
