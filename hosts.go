@@ -1,6 +1,17 @@
 package main
 
 var allowdHosts = map[string]bool{
+	"instagramimages-a.akamaihd.net":     true,
+	"instagramimages-b.akamaihd.net":     true,
+	"instagramimages-c.akamaihd.net":     true,
+	"instagramimages-d.akamaihd.net":     true,
+	"instagramimages-e.akamaihd.net":     true,
+	"instagramimages-f.akamaihd.net":     true,
+	"instagramimages-g.akamaihd.net":     true,
+	"instagramimages-h.akamaihd.net":     true,
+	"instagramimages-i.akamaihd.net":     true,
+	"instagramimages-j.akamaihd.net":     true,
+	"instagramimages-k.akamaihd.net":     true,
 	"igcdn-photos-a-a.akamaihd.net":      true,
 	"igcdn-photos-b-a.akamaihd.net":      true,
 	"igcdn-photos-c-a.akamaihd.net":      true,
