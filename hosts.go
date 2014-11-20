@@ -1,6 +1,7 @@
 package main
 
 var allowdHosts = map[string]bool{
+	"igcdn-photos-e-a.akamaihd.net":      true,
 	"distillery.s3.amazonaws.com":        true,
 	"distilleryimage0.s3.amazonaws.com":  true,
 	"distilleryimage1.s3.amazonaws.com":  true,
@@ -32,7 +33,7 @@ var allowdHosts = map[string]bool{
 	"scontent-d.cdninstagram.com":        true,
 	"scontent-e.cdninstagram.com":        true,
 	"scontent-f.cdninstagram.com":        true,
-	"zhinsta.com:8080":                   true, // for debug
+	// "zhinsta.com:8080":                   true, // for debug
 }
 
 func isHostAllowed(host string) bool {
