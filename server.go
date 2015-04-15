@@ -41,6 +41,8 @@ func newProxyHandler(c *gin.Context) {
 	}
 
 	c.Writer.Header().Set("Cache-Control", "max-age=604800")
+	c.Writer.Header().Set("Expires", "Fri, 10 Oct 2098 14:19:41 GMT")
+
 	c.Data(200, resp.Header.Get("Content-Type"), body)
 }
 
