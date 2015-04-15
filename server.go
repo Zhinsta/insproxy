@@ -29,17 +29,18 @@ func newProxyHandler(c *gin.Context) {
 	}
 
 	resp, err := http.Get(insUrl.String())
+	defer resp.Body.Close()
 	if err != nil {
 		c.String(502, "instagram error")
 		return
 	}
-	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		c.String(500, "read error")
 	}
 
+	resp.Header.Set("Cache-Control", "max-age=604800")
 	c.Data(200, resp.Header.Get("Content-Type"), body)
 }
 
