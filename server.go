@@ -9,6 +9,10 @@ import (
 )
 
 func newProxyHandler(c *gin.Context) {
+	if c.Request.Header.Get("Referer") != "http://www.zhinsta.com/" {
+		c.String(406, "instersting ...")
+		return
+	}
 	encodedUrl := c.Params.ByName("url")
 
 	picUrl, err := base64.StdEncoding.DecodeString(encodedUrl)
