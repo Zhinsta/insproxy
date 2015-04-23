@@ -64,10 +64,10 @@ func urlDecrypt(encoded string) (decoded string, err error) {
 }
 
 func newProxyHandler(c *gin.Context) {
-	// if c.Request.Header.Get("Referer") != "http://www.zhinsta.com/" {
-	// 	c.String(406, "instersting ...")
-	// 	return
-	// }
+	if c.Request.Header.Get("Referer") != "http://www.zhinsta.com/" {
+		c.String(406, "instersting ...")
+		return
+	}
 
 	encodedUrl := c.Params.ByName("url")
 
